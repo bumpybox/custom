@@ -1,0 +1,9 @@
+[submodule "plugins/CelAction"]
+	path = plugins/CelAction
+	url = https://github.com/tokejepsen/CelAction.git
+[submodule "events/EventScript"]
+	path = events/EventScript
+	url = https://github.com/tokejepsen/EventScript.git
+[submodule "plugins/TVPaint"]
+	path = plugins/TVPaint
+	url = https://github.com/tokejepsen/TVPaint.git
