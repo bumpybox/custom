@@ -1,0 +1,134 @@
+[State]
+Type=Enum
+Items=Global Enabled;Disabled
+Category=Options
+CategoryOrder=0
+CategoryIndex=0
+Label=State
+Default=Disabled
+Description=How this event plug-in should respond to events. If Global, all jobs and slaves will trigger the events for this plugin. If Opt-In, jobs and slaves can choose to trigger the events for this plugin. If Disabled, no events are triggered for this plugin.
+
+[CreateOnSubmission]
+Type=boolean
+Category=Options
+CategoryOrder=0
+CategoryIndex=1
+Label=Create Version On Submission
+Default=true
+Description=Will create an Asset Version on submission, and update its status as it renders. If false, it will only get created when the Job completes.
+
+[MainComponentName]
+Type=string
+Category=Options
+CategoryOrder=0
+CategoryIndex=2
+Label=Main Component Name
+Default=main
+Description=The name to use if only a single component is created. Defaults to main.
+
+[SceneComponentName]
+Type=string
+Category=Options
+CategoryOrder=0
+CategoryIndex=3
+Label=Scene Component Name
+Default=scene
+Description=The name to use for the scene if you are submitting it as a component. Defaults to scene.
+
+[DraftMovieComponentName]
+Type=string
+Category=Options
+CategoryOrder=0
+CategoryIndex=4
+Label=Draft Movie Component Name
+Default=main
+Description=The name to use for a component when upload a Draft movie after rendering. Defaults to draft_movie
+
+[FTrackURL]
+Type=string
+Category=Connection Settings
+CategoryOrder=1
+CategoryIndex=0
+Label=FTrack URL
+Description=Your FTrack URL.
+Required=true
+DisableIfBlank=false
+Default=
+
+[FTrackProxy]
+Type=string
+Category=Connection Settings
+CategoryOrder=1
+CategoryIndex=1
+Label=FTrack Proxy
+Description=Your proxy (if you use one).
+Required=true
+DisableIfBlank=false
+Default=
+
+[FTrackAPIKey]
+Type=string
+Category=Connection Settings
+CategoryOrder=1
+CategoryIndex=2
+Label=FTrack API Key
+Description=The API Key to use to connect to FTrack.
+Required=true
+DisableIfBlank=false
+Default=
+
+
+[VersionStatusQueued]
+Type=string
+Category=Version Status Mappings
+CategoryOrder=2
+CategoryIndex=0
+Label=Queued Status
+Description=The status code to set while the Deadline job is queued.
+Required=true
+DisableIfBlank=false
+Default=WIP
+
+[VersionStatusStarted]
+Type=string
+Category=Version Status Mappings
+CategoryOrder=2
+CategoryIndex=1
+Label=Started Status
+Description=The status code to set when the Deadline job starts.
+Required=true
+DisableIfBlank=false
+Default=
+
+[VersionStatusFinished]
+Type=string
+Category=Version Status Mappings
+CategoryOrder=2
+CategoryIndex=2
+Label=Finished Status
+Description=The status code to set when the Deadline job finishes.
+Required=true
+DisableIfBlank=false
+Default=Pending Review
+
+[VersionStatusFailed]
+Type=string
+Category=Version Status Mappings
+CategoryOrder=2
+CategoryIndex=3
+Label=Failed Status
+Description=The status code to set when the Deadline job fails.
+Required=true
+DisableIfBlank=false
+Default=
+
+[FTrackDraftTemplate]
+Type=filename
+Category=FTrack Draft Template
+CategoryOrder=3
+CategoryIndex=0
+Label=Draft Template
+Description=The default Draft template to use with FTrack.
+Required=false
+DisableIfBlank=false
+Default=
