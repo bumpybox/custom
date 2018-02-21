@@ -7,3 +7,6 @@
 [submodule "plugins/TVPaint"]
 	path = plugins/TVPaint
 	url = https://github.com/tokejepsen/TVPaint.git
+[submodule "plugins/Nuke/Cryptomatte"]
+	path = plugins/Nuke/Cryptomatte
+	url = https://github.com/Psyop/Cryptomatte.git
