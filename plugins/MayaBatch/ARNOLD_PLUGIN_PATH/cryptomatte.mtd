@@ -1,0 +1,84 @@
+[node cryptomatte]
+	desc STRING "Cryptomatte AOV Shader"
+	aov_shader BOOL TRUE
+	c4d.classification STRING "texture"
+	c4d.menu STRING "texture"
+	maya.name STRING "cryptomatte"
+	maya.classification STRING "utility/aov"
+	maya.id INT 0x00116422
+	houdini.icon STRING "VOP_shadinglayer"
+	houdini.category STRING "AOV"
+	houdini.help_url STRING "http://www.anderslanglands.com/alshaders/cryptomatte.html"
+	houdini.parm.folder.ROOT STRING "Cryptomatte Globals;4;Standard Cryptomatte AOVs;3;User Defined Cryptomattes;12;"
+	houdini.parm.heading.h0 STRING "User Cryptomatte 0"
+	houdini.parm.heading.h1 STRING "User Cryptomatte 1"
+	houdini.parm.heading.h2 STRING "User Cryptomatte 2"
+	houdini.parm.heading.h3 STRING "User Cryptomatte 3"
+	houdini.order STRING " ROOT"
+	houdini.order2 STRING " sidecar_manifests cryptomatte_depth strip_obj_namespaces strip_mat_namespaces"
+	houdini.order3 STRING " aov_crypto_asset aov_crypto_object aov_crypto_material"
+	houdini.order4 STRING " h0 user_crypto_aov_0 user_crypto_src_0 h1 user_crypto_aov_1 user_crypto_src_1 h2 user_crypto_aov_2 user_crypto_src_2 h3 user_crypto_aov_3 user_crypto_src_3"
+
+	[attr sidecar_manifests]
+		houdini.label STRING "Sidecar Manifests"
+		desc STRING "Sets whether Cryptomatte should write the manifest to a sidecar .json file instead of the EXR header."
+		linkable BOOL FALSE
+	[attr cryptomatte_depth]
+		houdini.label STRING "Cryptomatte Depth"
+		desc STRING "Set the cryptomatte depth (number of cryptomatte AOVs)"
+		linkable BOOL FALSE
+	[attr strip_obj_namespaces]
+		houdini.label STRING "Strip Object Namespaces"
+		desc STRING "Strip namespaces from object names"
+		linkable BOOL FALSE
+	[attr strip_mat_namespaces]
+		houdini.label STRING "Strip Material Namespaces"
+		desc STRING "Strip namespaces from material names"
+		linkable BOOL FALSE
+	[attr user_crypto_aov_0]
+		houdini.label STRING "AOV name"
+		desc STRING "AOV name for user Cryptomatte 0"
+		linkable BOOL FALSE
+	[attr user_crypto_src_0]
+		houdini.label STRING "Source User Data"
+		desc STRING "Source user data name for user Cryptomatte 0"
+		linkable BOOL FALSE
+	[attr user_crypto_aov_1]
+		houdini.label STRING "AOV name"
+		desc STRING "AOV name for user Cryptomatte 1"
+		linkable BOOL FALSE
+	[attr user_crypto_src_1]
+		houdini.label STRING "Source User Data"
+		desc STRING "Source user data name for user Cryptomatte 1"
+		linkable BOOL FALSE
+	[attr user_crypto_aov_2]
+		houdini.label STRING "AOV name"
+		desc STRING "AOV name for user Cryptomatte 2"
+		linkable BOOL FALSE
+	[attr user_crypto_src_2]
+		houdini.label STRING "Source User Data"
+		desc STRING "Source user data name for user Cryptomatte 2"
+		linkable BOOL FALSE
+	[attr user_crypto_aov_3]
+		houdini.label STRING "AOV name"
+		desc STRING "AOV name for user Cryptomatte 3"
+		linkable BOOL FALSE
+	[attr user_crypto_src_3]
+		houdini.label STRING "Source User Data"
+		desc STRING "Source user data name for user Cryptomatte 3"
+		linkable BOOL FALSE
+	[attr aov_crypto_asset]
+		houdini.label STRING "Asset AOV name"
+		aov.type INT 0x05
+		aov.enable_composition BOOL TRUE
+		default STRING "crypto_asset"
+	[attr aov_crypto_object]
+		houdini.label STRING "Object AOV name"
+		aov.type INT 0x05
+		aov.enable_composition BOOL TRUE
+		default STRING "crypto_object"
+	[attr aov_crypto_material]
+		houdini.label STRING "Material AOV name"
+		aov.type INT 0x05
+		aov.enable_composition BOOL TRUE
+		default STRING "crypto_material"
