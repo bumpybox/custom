@@ -5,7 +5,7 @@ Category=Options
 CategoryOrder=0
 CategoryIndex=0
 Label=State
-Default=Disabled
+Default=Global Enabled
 Description=How this event plug-in should respond to events. If Global, all jobs and slaves will trigger the events for this plugin. If Opt-In, jobs and slaves can choose to trigger the events for this plugin. If Disabled, no events are triggered for this plugin.
 
 [CreateOnSubmission]
@@ -14,7 +14,7 @@ Category=Options
 CategoryOrder=0
 CategoryIndex=1
 Label=Create Version On Submission
-Default=true
+Default=false
 Description=Will create an Asset Version on submission, and update its status as it renders. If false, it will only get created when the Job completes.
 
 [MainComponentName]
@@ -53,7 +53,7 @@ Label=FTrack URL
 Description=Your FTrack URL.
 Required=true
 DisableIfBlank=false
-Default=
+Default=https://bumpybox.ftrackapp.com
 
 [FTrackProxy]
 Type=string
@@ -87,7 +87,7 @@ Label=Queued Status
 Description=The status code to set while the Deadline job is queued.
 Required=true
 DisableIfBlank=false
-Default=WIP
+Default=Processing Queued
 
 [VersionStatusStarted]
 Type=string
@@ -98,7 +98,7 @@ Label=Started Status
 Description=The status code to set when the Deadline job starts.
 Required=true
 DisableIfBlank=false
-Default=
+Default=Processing
 
 [VersionStatusFinished]
 Type=string
@@ -109,7 +109,7 @@ Label=Finished Status
 Description=The status code to set when the Deadline job finishes.
 Required=true
 DisableIfBlank=false
-Default=Pending Review
+Default=Processing Done
 
 [VersionStatusFailed]
 Type=string
@@ -120,7 +120,7 @@ Label=Failed Status
 Description=The status code to set when the Deadline job fails.
 Required=true
 DisableIfBlank=false
-Default=
+Default=Processing Failed
 
 [FTrackDraftTemplate]
 Type=filename
