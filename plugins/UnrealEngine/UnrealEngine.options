@@ -1,0 +1,218 @@
+[Version]
+Type=label
+Label=Version
+Category=Version Info
+Index=0
+Description=The version of Unreal Engine Editor to render with.
+Required=false
+DisableIfBlank=true
+
+[ProjectFile]
+Type=filename
+Label=Project Filename
+Category=General Options
+Index=0
+Description=The project filename as it exists on the network.
+Required=true
+DisableIfBlank=false
+
+[Map]
+Type=String
+Label=Map Name
+Category=General Options
+Index=1
+Description=The path to the map that will be loaded for the render.
+Required=true
+DisableIfBlank=false
+
+[LevelSequence]
+Type=String
+Label=Level Sequence
+Category=General Options
+Index=2
+Description=The path to the level sequence that will be rendered out. eg. /Game/PathToSequence/SequenceName
+Required=true
+DisableIfBlank=false
+
+[OutputDir]
+Type=folder
+Label=Output Directory
+Category=Output Options
+Index=0
+Description=Destination folder for rendered images. Defaults to Project/Saved/Screenshots if left blank.
+Required=true
+DisableIfBlank=false
+Default=
+
+[MovieName]
+Type=String
+Label=Output Filename
+Category=General Options
+Index=1
+Description=Sets the naming format for the output files. Defaults to project.{frame}. Avilable Tokens {fps}, {frame}, {width}, {height}, {world}, {quality}, {material}.
+Required=true
+DisableIfBlank=false
+
+[OutputFormat]
+Type=enum
+Values=JPG;BMP;PNG;AVI;CustomRenderPasses
+Label=Output Format
+Category=Output Options
+Index=2
+Description=The format for the output filename.
+Required=false
+DisableIfBlank=true
+
+[OutputQuality]
+Type=integer
+Minimum=1
+Maximum=100
+Increment=1
+Label=Output Quality
+Category=Output Options
+Index=3
+Description=Sets the compression quality. Expressed in a percentage.
+Required=false
+DisableIfBlank=true
+
+[OverrideResolution]
+Type=boolean
+Label=Override Resolutions
+Category=Rendering Options
+Index=0
+Description=If enabled, the output resolution will be overridden.
+Required=false
+DisableIfBlank=true
+
+[ResX]
+Type=integer
+Minimum=1
+Maximum=32768
+Increment=1
+Label=Width
+Category=Rendering Options
+Index=1
+Description=Sets the output width in pixels.
+Required=false
+DisableIfBlank=true
+
+[ResY]
+Type=integer
+Minimum=1
+Maximum=32768
+Increment=1
+Label=Height
+Category=Rendering Options
+Index=2
+Description=Sets the output height in pixels.
+Required=false
+DisableIfBlank=true
+
+[FrameRate]
+Type=integer
+Minimum=1
+Maximum=32768
+Increment=1
+Label=Frame Rate
+Category=Rendering Options
+Index=3
+Description=Sets the frame rate of the output.
+Required=false
+DisableIfBlank=true
+
+[DisableTextureStreaming]
+Type=boolean
+Label=Disable Texture Streaming
+Category=Rendering Options
+Index=4
+Description=Disable Texture streaming while rendering. Will take longer to render, but worth it for final renders.
+Required=false
+DisableIfBlank=true
+
+[CinematicMode]
+Type=boolean
+Label=Cinematic Mode
+Category=Rendering Options
+Index=5
+Description=Hides Player Character and disables Player Character Movement. Also disables HUD.
+Required=false
+DisableIfBlank=true
+
+[WarmupFrames]
+Type=integer
+Minimum=1
+Maximum=32768
+Increment=1
+Label=Warmup Frames
+Category=Rendering Options
+Index=6
+Description=Number of frames to run the scene before playing the sequence. This will not play out in real-time.
+Required=false
+DisableIfBlank=true
+
+[HideMessages]
+Type=boolean
+Label=Hide Messages
+Category=Rendering Options
+Index=7
+Description=Hides on screen messages like "Rebuild Lighting" or "Pring String" outputs.
+Required=false
+DisableIfBlank=true
+
+[VSyncEnabled]
+Type=boolean
+Label=Enable VSync
+Category=Rendering Options
+Index=8
+Description=Enable VSync for batch rendering.
+Required=false
+DisableIfBlank=true
+
+[CustomRenderPasses]
+Type=MultiLineString
+Label=Custom Render Passes
+Category=Rendering Options
+Index=9
+Description=Sets the custom render Pass.
+Required=false
+DisableIfBlank=true
+
+[CaptureHDR]
+Type=boolean
+Label=Capture Frames In HDR
+Category=Rendering Options
+Index=10
+Description=Renders with HDR in the .exr format.
+Required=false
+DisableIfBlank=true
+
+[HDRCompressionQuality]
+Type=integer
+Minimum=0
+Maximum=1
+Increment=1
+Label=HDR Compression Quality
+Category=Rendering Options
+Index=11
+Description=Compression Quality for HDR Frames (0 for no compression, 1 for default compression which can be slow).
+Required=false
+DisableIfBlank=true
+
+[CaptureGamut]
+Type=enum
+Values=HCGM_Rec709;HCGM_P3DCI;HCGM_Rec2020;HCGM_ACES;HCGM_ACEScg;HCGM_MAX
+Label=Capture Gamut
+Category=Rendering Options
+Index=12
+Description=The color gamut to use when storing HDR captured data.
+Required=false
+DisableIfBlank=true
+
+[PostProcessingMaterial]
+Type=String
+Label=Post Processing Material
+Category=Rendering Options
+Index=13
+Description=Custom Post Processing Material to use for rendering.
+Required=true
+DisableIfBlank=false

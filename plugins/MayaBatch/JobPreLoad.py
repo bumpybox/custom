@@ -1,16 +1,14 @@
-import os
+from System import *
+from System.IO import *
 
+def __main__( deadlinePlugin ):
+    env = {
+        "BIFROST_LIB_CONFIG_FILES": (
+            "K:/pype-setup/repos/bumpybox-environment/environment/"
+            "BIFROST_LIB_CONFIG_FILES/config.json"
+        )
+    }
 
-def __main__(deadlinePlugin):
-
-    deadlinePlugin.LogInfo("Adding custom userSetup.py")
-
-    deadlinePlugin.SetProcessEnvironmentVariable(
-        "PYTHONPATH",
-        os.path.abspath(os.path.join(__file__, "..", "PYTHONPATH"))
-    )
-
-    deadlinePlugin.SetProcessEnvironmentVariable(
-        "ARNOLD_PLUGIN_PATH",
-        os.path.abspath(os.path.join(__file__, "..", "ARNOLD_PLUGIN_PATH"))
-    )
+    for key, value in env.items():
+        deadlinePlugin.LogInfo("Setting {} to:\n{}".format(key, value))
+        deadlinePlugin.SetProcessEnvironmentVariable(key, value)

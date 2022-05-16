@@ -1,0 +1,75 @@
+[State]
+Type=Enum
+Items=Global Enabled;Disabled
+Category=Options
+CategoryOrder=0
+CategoryIndex=0
+Label=State
+Default=Disabled
+Description=How this event plug-in should respond to events. If Global, all jobs and slaves will trigger the events for this plugin. If Opt-In, jobs and slaves can choose to trigger the events for this plugin. If Disabled, no events are triggered for this plugin.
+
+[VersionStatusQueued]
+Type=string
+Category=Version Status Mappings
+CategoryOrder=2
+CategoryIndex=0
+Label=Queued Status
+Description=The status code to set while the Deadline job is queued.
+Required=true
+DisableIfBlank=false
+Default=WIP
+
+[VersionStatusStarted]
+Type=string
+Category=Version Status Mappings
+CategoryOrder=2
+CategoryIndex=1
+Label=Started Status
+Description=The status code to set when the Deadline job starts.
+Required=true
+DisableIfBlank=false
+Default=
+
+[VersionStatusFinished]
+Type=string
+Category=Version Status Mappings
+CategoryOrder=2
+CategoryIndex=2
+Label=Finished Status
+Description=The status code to set when the Deadline job finishes.
+Required=true
+DisableIfBlank=false
+Default=Pending Review
+
+[VersionStatusFailed]
+Type=string
+Category=Version Status Mappings
+CategoryOrder=2
+CategoryIndex=3
+Label=Failed Status
+Description=The status code to set when the Deadline job fails.
+Required=true
+DisableIfBlank=false
+Default=
+
+[VersionStatusSuspended]
+Type=string
+Category=Version Status Mappings
+CategoryOrder=2
+CategoryIndex=4
+Label=Suspended Status
+Description=The status code to set when the Deadline job suspends.
+Required=true
+DisableIfBlank=false
+Default=
+
+[VersionStatusResumed]
+Type=string
+Category=Version Status Mappings
+CategoryOrder=2
+CategoryIndex=4
+Label=Resumed Status
+Description=The status code to set when the Deadline job resumes.
+Required=true
+DisableIfBlank=false
+Default=

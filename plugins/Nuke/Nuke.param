@@ -196,6 +196,24 @@ Label=Nuke 11.1 Render Executable
 Default=C:\Program Files\Nuke11.1v1\Nuke11.1.exe;/usr/local/Nuke11.1v1/Nuke11.1;/Applications/Nuke11.1v1/Nuke11.1v1.app/Contents/MacOS/Nuke11.1v1
 Description=The path to the Nuke 11.1 executable file used for rendering. Enter alternative paths on separate lines.
 
+[RenderExecutable11_2]
+Type=multilinemultifilename
+Category=Nuke 11 Render Executables
+CategoryOrder=6
+CategoryIndex=2
+Label=Nuke 11.2 Render Executable
+Default=C:\Program Files\Nuke11.2v1\Nuke11.2.exe;/usr/local/Nuke11.2v1/Nuke11.2;/Applications/Nuke11.2v1/Nuke11.2v1.app/Contents/MacOS/Nuke11.2v1
+Description=The path to the Nuke 11.2 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable11_3]
+Type=multilinemultifilename
+Category=Nuke 11 Render Executables
+CategoryOrder=6
+CategoryIndex=2
+Label=Nuke 11.3 Render Executable
+Default=C:\Program Files\Nuke11.3v1\Nuke11.3.exe;/usr/local/Nuke11.3v1/Nuke11.3;/Applications/Nuke11.3v1/Nuke11.3v1.app/Contents/MacOS/Nuke11.3v1
+Description=The path to the Nuke 11.3 executable file used for rendering. Enter alternative paths on separate lines.
+
 [InteractiveSlaves]
 Type=slavelist
 Category=Licensing Options

@@ -1,0 +1,82 @@
+#! C:/Program Files/Nuke11.0v4/nuke-11.0.4.dll -nx
+version 11.0 v4
+Gizmo {
+ inputs 2
+ addUserKnob {20 User}
+ addUserKnob {41 resize l "resize type" T Reformat1.resize}
+ addUserKnob {41 scale T pre_scale.scale}
+}
+ Input {
+  inputs 0
+  name image
+  xpos 86
+  ypos -19
+  number 1
+ }
+ Transform {
+  scale 1.1
+  center {960 540}
+  name pre_scale
+  xpos 86
+  ypos 7
+ }
+set Nb544d880 [stack 0]
+ Transform {
+  translate {{"(bounding_box.bbox.x + (bounding_box.bbox.w / 2)) - (image.bbox.w / 2)"} {"(bounding_box.bbox.y + (bounding_box.bbox.h / 2)) - (image.bbox.h / 2)"}}
+  scale {{scale.h} {"bounding_box.bbox.h / image.bbox.h"}}
+  center {{"image.bbox.w / 2"} {"image.bbox.h / 2"}}
+  name Transform1
+  xpos -53
+  ypos 185
+ }
+push $Nb544d880
+ Transform {
+  translate {{"(bounding_box.bbox.x + (bounding_box.bbox.w / 2)) - (image.bbox.w / 2)"} {"(bounding_box.bbox.y + (bounding_box.bbox.h / 2)) - (image.bbox.h / 2)"}}
+  scale {{"bounding_box.bbox.w / image.bbox.w"} {scale.w}}
+  center {{"image.bbox.w / 2"} {"image.bbox.h / 2"}}
+  name Transform2
+  xpos 86
+  ypos 88
+ }
+set Nef449880 [stack 0]
+push 0
+ Switch {
+  inputs 3
+  which {{Reformat1.resize}}
+  name Switch1
+  xpos 86
+  ypos 185
+ }
+set Nef449500 [stack 0]
+ Output {
+  name Output1
+  xpos 86
+  ypos 421
+ }
+ Input {
+  inputs 0
+  name bounding_box
+  xpos -133
+  ypos 86
+ }
+push $Nef449880
+push $Nef449500
+ Viewer {
+  inputs 2
+  frame 65
+  frame_range 134-134
+  fps 25
+  translate {-0.6240000129 -0.3379999995}
+  gauge 0.6973478794
+  name Viewer1
+  xpos -380
+  ypos 251
+ }
+ Reformat {
+  inputs 0
+  resize height
+  name Reformat1
+  xpos 244
+  ypos 143
+ }
+end_group

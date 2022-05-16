@@ -1,0 +1,26 @@
+[About]
+Type=label
+Label=About
+Category=About Plugin
+CategoryOrder=-1
+Index=0
+Default=Unreal Engine Plugin for Deadline
+Description=Not configurable
+
+[ConcurrentTasks]
+Type=label
+Label=ConcurrentTasks
+Category=About Plugin
+CategoryOrder=-1
+Index=0
+Default=True
+Description=Not configurable
+
+[UE_4_EditorExecutable]
+Type=multilinemultifilename
+Category=Editor Executables
+CategoryOrder=0
+CategoryIndex=0
+Label=Unreal Engine 4 Editor Executable
+Default=C:\Program Files\Epic Games\UE_4.15\Engine\Binaries\Win64\UE4Editor.exe
+Description=The path to the Unreal Engine 4 Editor executable file used for rendering. Enter alternative paths on separate lines.
