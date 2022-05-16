@@ -7,3 +7,6 @@
 [submodule "plugins/TVPaint"]
 	path = plugins/TVPaint
 	url = https://github.com/tokejepsen/TVPaint.git
+[submodule "plugins/MayaSequence"]
+	path = plugins/MayaSequence
+	url = https://github.com/tokejepsen/MayaSequence.git
