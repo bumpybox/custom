@@ -1,7 +1,8 @@
 from System import *
 from System.IO import *
 
-def __main__( deadlinePlugin ):
+
+def __main__(deadlinePlugin):
     env = {
         "BIFROST_LIB_CONFIG_FILES": (
             "K:/pype-setup/repos/bumpybox-environment/environment/"
