@@ -1,0 +1,1 @@
+../MayaSequence/userSetup.py
