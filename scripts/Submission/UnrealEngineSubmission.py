@@ -61,7 +61,7 @@ def __main__(*args):
     scriptDialog.AddTabPage("Job Options")
 
     jobOptions_dialog = JobOptionsUI.JobOptionsDialog(
-        parentAppName = "UnrealEngineMonitor"
+        parentAppName="UnrealEngineMonitor"
     )
 
     scriptDialog.AddScriptControl("JobOptionsDialog", jobOptions_dialog, "")
@@ -81,14 +81,20 @@ def __main__(*args):
     scriptDialog.AddControlToGrid("LevelSequenceLabel", "LabelControl", "Level Sequence", 3, 0, "The path to the level sequence that will be rendered out. eg. /Game/PathToSequence/SequenceName", False)
     scriptDialog.AddControlToGrid("LevelSequenceBox", "TextControl", "", 3, 1, colSpan=3)
 
-    scriptDialog.AddControlToGrid("FramesLabel", "LabelControl", "Frame List", 4, 0, "The list of frames to render.", False)
-    scriptDialog.AddControlToGrid("FramesBox", "TextControl", "", 4, 1, colSpan=3)
+    movieQueueCheckBox = scriptDialog.AddSelectionControlToGrid("MovieQueueCheckBox", "CheckBoxControl", True, "Movie Queue", 4, 0, "Submits render with Movie Queue.", True)
+    movieQueueCheckBox.ValueModified.connect(MovieQueueCheckBoxChanged)
+    movieQueueCheckBox.setChecked(False)
+    movieQueueTextBox = scriptDialog.AddControlToGrid("MovieQueueTextBox", "TextControl", "", 4, 1, colSpan=3)
+    movieQueueTextBox.setEnabled(False)
 
-    scriptDialog.AddControlToGrid("ChunkSizeLabel", "LabelControl", "Frames Per Task", 5, 0, "This is the number of frames that will be rendered at a time for each job task.", False)
-    scriptDialog.AddRangeControlToGrid("ChunkSizeBox", "RangeControl", 1, 1, 1000000, 0, 1, 5, 1)
+    scriptDialog.AddControlToGrid("FramesLabel", "LabelControl", "Frame List", 5, 0, "The list of frames to render.", False)
+    scriptDialog.AddControlToGrid("FramesBox", "TextControl", "", 5, 1, colSpan=3)
 
-    scriptDialog.AddControlToGrid("VersionLabel", "LabelControl", "Version", 5, 2 , "The version of Unreal Engine to render with.", False)
-    versionBox = scriptDialog.AddComboControlToGrid("VersionBox", "ComboControl", "4", ("4", "5"), 5, 3)
+    scriptDialog.AddControlToGrid("ChunkSizeLabel", "LabelControl", "Frames Per Task", 6, 0, "This is the number of frames that will be rendered at a time for each job task.", False)
+    scriptDialog.AddRangeControlToGrid("ChunkSizeBox", "RangeControl", 1, 1, 1000000, 0, 1, 6, 1)
+
+    scriptDialog.AddControlToGrid("VersionLabel", "LabelControl", "Version", 6, 2 , "The version of Unreal Engine to render with.", False)
+    scriptDialog.AddComboControlToGrid("VersionBox", "ComboControl", "4", ("4", "5"), 6, 3)
 
     scriptDialog.EndGrid()
     scriptDialog.EndTabPage()
@@ -169,7 +175,7 @@ def __main__(*args):
     closeButton.ValueModified.connect(jobOptions_dialog.closeEvent)
     scriptDialog.EndGrid()
 
-    settings = ("ProjectBox", "MapBox", "LevelSequenceBox", "FramesBox", "ChunkSizeBox", "VersionBox", "OutputDirBox",
+    settings = ("ProjectBox", "MapBox", "LevelSequenceBox", "MovieQueueTextBox", "FramesBox", "ChunkSizeBox", "VersionBox", "OutputDirBox",
     "OutputNameBox", "OutputFormatBox", "OverrideResolutionBox", "WidthBox", "HeightBox", "FrameRateBox", "MovieQualityBox",
     "DelayBeforeBox", "CinematicModeBox", "HideMessagesBox", "EnableVSyncBox", "DisableTextureStreamingBox", "CustomRenderPassesBox",
     "CaptureHDRBox", "HDRCompressionQualityBox", "CaptureGamutBox", "PostProcessingBox")
@@ -182,8 +188,12 @@ def __main__(*args):
 
     scriptDialog.ShowDialog(False)
 
+
 def GetSettingsFilename():
-    return Path.Combine(ClientUtils.GetUsersSettingsDirectory(), "UnrealEngineSettings.ini")
+    return Path.Combine(
+        ClientUtils.GetUsersSettingsDirectory(), "UnrealEngineSettings.ini"
+    )
+
 
 def OverrideResolutionChanged(*args):
     global scriptDialog
@@ -193,10 +203,13 @@ def OverrideResolutionChanged(*args):
     scriptDialog.SetEnabled("HeightLabel", overrideResolution)
     scriptDialog.SetEnabled("HeightBox", overrideResolution)
 
+
 def OutputFormatModified(*args):
     global scriptDialog
 
-    usingCustom = (scriptDialog.GetValue("OutputFormatBox") =="CustomRenderPasses")
+    usingCustom = (
+        scriptDialog.GetValue("OutputFormatBox") == "CustomRenderPasses"
+    )
 
     scriptDialog.SetEnabled("CustomRenderPassesLabel", usingCustom)
     scriptDialog.SetEnabled("CustomRenderPassesBox", usingCustom)
@@ -206,20 +219,56 @@ def OutputFormatModified(*args):
 
     CaptureHDRChanged(None)
 
+
 def CaptureHDRChanged(*args):
     global scriptDialog
 
-    capturingHDR = (scriptDialog.GetEnabled("CaptureHDRBox") and scriptDialog.GetValue("CaptureHDRBox"))
+    capturingHDR = (
+        scriptDialog.GetEnabled("CaptureHDRBox") and
+        scriptDialog.GetValue("CaptureHDRBox")
+    )
 
     scriptDialog.SetEnabled("HDRCompressionQualityLabel", capturingHDR)
     scriptDialog.SetEnabled("HDRCompressionQualityBox", capturingHDR)
     scriptDialog.SetEnabled("CaptureGamutLabel", capturingHDR)
     scriptDialog.SetEnabled("CaptureGamutBox", capturingHDR)
 
+
+def MovieQueueCheckBoxChanged(*args):
+    global scriptDialog
+
+    state = scriptDialog.GetValue("MovieQueueCheckBox")
+
+    invert_settings = [
+        "LevelSequenceBox",
+        "FramesBox",
+        "ChunkSizeBox",
+        "OutputDirBox",
+        "OutputNameBox",
+        "OutputFormatBox",
+        "OutputFormatBox",
+        "OverrideResolutionBox",
+        "WidthBox",
+        "HeightBox",
+        "FrameRateBox",
+        "MovieQualityBox",
+        "DelayBeforeBox",
+        "CinematicModeBox",
+        "HideMessagesBox",
+        "EnableVSyncBox",
+        "DisableTextureStreamingBox",
+    ]
+    for setting in invert_settings:
+        scriptDialog.SetEnabled(setting, not state)
+
+    scriptDialog.SetEnabled("MovieQueueTextBox", state)
+
+
 def IsMovie():
     global scriptDialog
 
     return (scriptDialog.GetValue("OutputFormatBox") == "AVI")
+
 
 def SubmitButtonPressed(*args):
     global scriptDialog
@@ -241,8 +290,14 @@ def SubmitButtonPressed(*args):
         errors.append("Please specify a map to render.")
 
     levelSequence = scriptDialog.GetValue("LevelSequenceBox").strip()
-    if len(levelSequence) == 0:
-        errors.append("Please specify a level sequence to render.")
+    movieQueueCheckBox = scriptDialog.GetValue("MovieQueueCheckBox")
+    movieQueueTextBox = scriptDialog.GetValue("MovieQueueTextBox").strip()
+    if movieQueueCheckBox:
+        if len(movieQueueTextBox) == 0:
+            errors.append("Please specify a movie queue to render.")
+    else:
+        if len(levelSequence) == 0:
+            errors.append("Please specify a level sequence to render.")
 
      # Check if a valid frame range has been specified.
     frames = scriptDialog.GetValue("FramesBox")
@@ -251,12 +306,13 @@ def SubmitButtonPressed(*args):
 
     # Check output file.
     outputDir = scriptDialog.GetValue("OutputDirBox").strip()
-    if len(outputDir) == 0:
-        warnings.append("No output directory specified. All output will be created in the Project's default directory.")
-    elif(not Directory.Exists(outputDir)):
-        errors.append("The directory of the output file %s does not exist." % outputDir)
-    elif(PathUtils.IsPathLocal(outputDir)):
-        warnings.append("The output file %s is local. Are you sure you want to continue?" % outputDir)
+    if not movieQueueCheckBox:
+        if len(outputDir) == 0:
+            warnings.append("No output directory specified. All output will be created in the Project's default directory.")
+        elif(not Directory.Exists(outputDir)):
+            errors.append("The directory of the output file %s does not exist." % outputDir)
+        elif(PathUtils.IsPathLocal(outputDir)):
+            warnings.append("The output file %s is local. Are you sure you want to continue?" % outputDir)
 
     # Check if Integration options are valid.
     if not integration_dialog.CheckIntegrationSanity(outputDir):
@@ -280,7 +336,11 @@ def SubmitButtonPressed(*args):
     for option, value in jobOptions.iteritems():
         writer.WriteLine("%s=%s" % (option, value))
 
-    writer.WriteLine("Frames=%s" % frames)
+    if movieQueueCheckBox:
+        writer.WriteLine("Frames=0")
+    else:
+        writer.WriteLine("Frames=%s" % frames)
+
     if IsMovie():
         writer.WriteLine("ChunkSize=100000")
     else:
@@ -310,6 +370,8 @@ def SubmitButtonPressed(*args):
     writer.WriteLine("Map=%s" % scriptDialog.GetValue("MapBox"))
     writer.WriteLine("Map=%s" % scriptDialog.GetValue("MapBox"))
     writer.WriteLine("LevelSequence=%s" % scriptDialog.GetValue("LevelSequenceBox"))
+    writer.WriteLine("MovieQueue=%s" % scriptDialog.GetValue("MovieQueueTextBox"))
+    writer.WriteLine("RenderMovieQueue=%s" % scriptDialog.GetValue("MovieQueueCheckBox"))
     writer.WriteLine("OverrideResolution=%s" % scriptDialog.GetValue("OverrideResolutionBox"))
     writer.WriteLine("ResX=%s" % scriptDialog.GetValue("WidthBox"))
     writer.WriteLine("ResY=%s" % scriptDialog.GetValue("HeightBox"))

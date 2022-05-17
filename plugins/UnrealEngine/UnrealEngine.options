@@ -34,6 +34,15 @@ Description=The path to the level sequence that will be rendered out. eg. /Game/
 Required=true
 DisableIfBlank=false
 
+[MovieQueue]
+Type=String
+Label=Movie Queue
+Category=General Options
+Index=3
+Description=The path to the movie queue that will be rendered out. eg. /Game/PathToMovieQueue/MovieQueueName
+Required=false
+DisableIfBlank=false
+
 [OutputDir]
 Type=folder
 Label=Output Directory

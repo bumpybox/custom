@@ -64,19 +64,36 @@ class UnrealEnginePlugin(DeadlinePlugin):
         map = self.GetPluginInfoEntry("Map")
         arguments.append('"{0}"'.format(map))
         arguments.append('-game')
-        arguments.append(
-            '-MovieSceneCaptureType='
-            '"/Script/MovieSceneCapture.AutomatedLevelSequenceCapture"'
+
+        renderMovieQueue = self.GetBooleanPluginInfoEntryWithDefault(
+            "RenderMovieQueue", True
         )
 
-        levelSequence = self.GetPluginInfoEntry("LevelSequence")
-        arguments.append('-LevelSequence="{0}"'.format(levelSequence))
-        arguments.append('-NoLoadingScreen')
+        if renderMovieQueue:
+            arguments.append(
+                '-MoviePipelineConfig="{0}"'.format(
+                    self.GetPluginInfoEntry("MovieQueue")
+                )
+            )
+        else:
+            arguments.append(
+                '-MovieSceneCaptureType='
+                '"/Script/MovieSceneCapture.AutomatedLevelSequenceCapture"'
+            )
 
-        arguments.append('-MovieStartFrame={0}'.format(self.GetStartFrame()))
+            levelSequence = self.GetPluginInfoEntry("LevelSequence")
+            arguments.append('-LevelSequence="{0}"'.format(levelSequence))
+
+        arguments.append('-MovieStartFrame={0}'.format(
+            self.GetStartFrame())
+        )
 
         # End frame needs to be +1
-        arguments.append('-MovieEndFrame={0}'.format(self.GetEndFrame() + 1))
+        arguments.append('-MovieEndFrame={0}'.format(
+            self.GetEndFrame() + 1)
+        )
+
+        arguments.append('-NoLoadingScreen')
 
         arguments.append('-ForceRes')
         arguments.append('-windowed')
