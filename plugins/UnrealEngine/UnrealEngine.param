@@ -24,3 +24,12 @@ CategoryIndex=0
 Label=Unreal Engine 4 Editor Executable
 Default=C:\Program Files\Epic Games\UE_4.15\Engine\Binaries\Win64\UE4Editor.exe
 Description=The path to the Unreal Engine 4 Editor executable file used for rendering. Enter alternative paths on separate lines.
+
+[UE_5_EditorExecutable]
+Type=multilinemultifilename
+Category=Editor Executables
+CategoryOrder=0
+CategoryIndex=0
+Label=Unreal Engine 5 Editor Executable
+Default=C:\Program Files\Epic Games\UE_5.0\Engine\Binaries\Win64\UnrealEditor.exe
+Description=The path to the Unreal Engine 5 Editor executable file used for rendering. Enter alternative paths on separate lines.
