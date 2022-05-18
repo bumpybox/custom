@@ -299,20 +299,31 @@ def SubmitButtonPressed(*args):
         if len(levelSequence) == 0:
             errors.append("Please specify a level sequence to render.")
 
-     # Check if a valid frame range has been specified.
+    # Check if a valid frame range has been specified.
     frames = scriptDialog.GetValue("FramesBox")
-    if(not FrameUtils.FrameRangeValid(frames)):
-        errors.append("Frame range %s is not valid" % frames)
+    if not movieQueueCheckBox:
+        if(not FrameUtils.FrameRangeValid(frames)):
+            errors.append("Frame range %s is not valid" % frames)
 
     # Check output file.
     outputDir = scriptDialog.GetValue("OutputDirBox").strip()
     if not movieQueueCheckBox:
         if len(outputDir) == 0:
-            warnings.append("No output directory specified. All output will be created in the Project's default directory.")
+            warnings.append(
+                "No output directory specified. All output will be created in "
+                "the Project's default directory."
+            )
         elif(not Directory.Exists(outputDir)):
-            errors.append("The directory of the output file %s does not exist." % outputDir)
+            errors.append(
+                "The directory of the output file {0} does not exist.".format(
+                    outputDir
+                )
+            )
         elif(PathUtils.IsPathLocal(outputDir)):
-            warnings.append("The output file %s is local. Are you sure you want to continue?" % outputDir)
+            warnings.append(
+                "The output file {0} is local. Are you sure you want to "
+                "continue?".format(outputDir)
+            )
 
     # Check if Integration options are valid.
     if not integration_dialog.CheckIntegrationSanity(outputDir):
