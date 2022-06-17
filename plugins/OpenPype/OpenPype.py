@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from System.IO import Path
 from System.Text.RegularExpressions import Regex
 
