@@ -36,14 +36,14 @@ class FTrackEventListener (DeadlineEventListener):
         self.OnJobResumedCallback -= self.OnJobResumed
 
     def load_environment(self, job):
-        self.LogInfo("Loading environment from: \"{}\"".format(job))
+        print("Loading environment from: \"{}\"".format(job))
         environment = {}
         if job.GetJobEnvironmentKeys():
             for key in job.GetJobEnvironmentKeys():
                 value = job.GetJobEnvironmentKeyValue(key)
                 environment[str(key)] = str(value)
 
-        self.LogInfo(json.dumps(environment, indent=4))
+        print(json.dumps(environment, indent=4))
 
         return environment
 
@@ -68,7 +68,7 @@ class FTrackEventListener (DeadlineEventListener):
         ]
         for variable in required_variables:
             if not environment.get(variable):
-                self.LogInfo(
+                print(
                     "Missing variable \"{}\" from environment.".format(
                         variable
                     )
@@ -105,7 +105,7 @@ class FTrackEventListener (DeadlineEventListener):
                 "\"{}\" was not successful: {}".format(args, output)
             )
 
-        self.LogInfo(output)
+        print(output)
 
     def OnJobSubmitted(self, job):
         # Setting the environment does not work on job submitted so this is
@@ -130,7 +130,7 @@ class FTrackEventListener (DeadlineEventListener):
                         break
 
         if not completed:
-            self.LogInfo(
+            print(
                 "Status update blocked, because not all jobs in batch \"{}\""
                 " are completed.".format(batch_name)
             )
