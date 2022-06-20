@@ -83,7 +83,6 @@ def __main__(*args):
 
     movieQueueCheckBox = scriptDialog.AddSelectionControlToGrid("MovieQueueCheckBox", "CheckBoxControl", True, "Movie Queue", 4, 0, "Submits render with Movie Queue.", True)
     movieQueueCheckBox.ValueModified.connect(MovieQueueCheckBoxChanged)
-    movieQueueCheckBox.setChecked(False)
     movieQueueTextBox = scriptDialog.AddControlToGrid("MovieQueueTextBox", "TextControl", "", 4, 1, colSpan=3)
     movieQueueTextBox.setEnabled(False)
 
@@ -185,6 +184,7 @@ def __main__(*args):
 
     OverrideResolutionChanged(None)
     OutputFormatModified(None)
+    movieQueueCheckBox.setChecked(False)
 
     scriptDialog.ShowDialog(False)
 
