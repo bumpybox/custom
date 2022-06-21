@@ -344,7 +344,7 @@ def SubmitButtonPressed(*args):
     writer = StreamWriter(jobInfoFilename, False, Encoding.Unicode)
 
     writer.WriteLine("Plugin=UnrealEngine")
-    for option, value in jobOptions.iteritems():
+    for option, value in jobOptions.items():
         writer.WriteLine("%s=%s" % (option, value))
 
     if movieQueueCheckBox:
