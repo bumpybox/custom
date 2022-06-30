@@ -3,6 +3,8 @@ import os
 
 from maya import cmds
 
+from maya.plugin.evaluator.cache_preferences import CachePreferenceEnabled
+
 
 def open_deadline_port():
 
@@ -25,5 +27,13 @@ def load_plugins():
     cmds.loadPlugin("AbcImport.mll", quiet=True)
 
 
+def setup():
+    # Turn off cached playback. This can cause issues when renders are jumping
+    # back and forth on the timeline.
+    print("Disabling playback cache...")
+    CachePreferenceEnabled().set_value(False)
+
+
 cmds.evalDeferred(load_plugins)
+cmds.evalDeferred(setup)
 cmds.evalDeferred(open_deadline_port, lowestPriority=True)
