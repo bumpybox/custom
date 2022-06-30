@@ -199,6 +199,20 @@ class MayaSequence(DeadlinePlugin):
             )
             self.scene_loaded = True
 
+            self.LogInfo("Auto Clamping and reloading textures.")
+            self.send_to_maya(
+                """
+import pymel.core as pc
+from maya import cmds, mel
+for panel in cmds.getPanel(type='modelPanel'):
+    print(panel)
+    cmds.modelEditor(panel, edit=True, displayTextures=False)
+
+pc.PyNode("hardwareRenderingGlobals").enableTextureMaxRes.set(1)
+mel.eval('ogs -reloadTextures;')
+"""
+            )
+
         # Rendering frames.
         self.LogInfo("Rendering frames: {} to {}.".format(
                 self.GetStartFrame(),
