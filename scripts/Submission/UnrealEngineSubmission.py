@@ -338,6 +338,15 @@ def SubmitButtonPressed(*args):
         if result == "No":
             return
 
+    asset_dependencies = []
+    result = scriptDialog.ShowMessageBox("Asset Dependencies:\n\nDo you want to add all files in the project folder as dependencies?", "Warnings", ("Yes", "No"))
+    if result == "Yes":
+        for root, dirs, files in os.walk(os.path.dirname(sceneFile)):
+            for file in files:
+                file_path = os.path.join(root, file).replace("\\", "/")
+                print("Found dependency: {}".format(file_path))
+                asset_dependencies.append(file_path)
+
     jobOptions = jobOptions_dialog.GetJobOptionsValues()
     # Create job info file.
     jobInfoFilename = Path.Combine(ClientUtils.GetDeadlineTempPath(), "unreal_engine_job_info.job")
@@ -346,6 +355,12 @@ def SubmitButtonPressed(*args):
     writer.WriteLine("Plugin=UnrealEngine")
     for option, value in jobOptions.items():
         writer.WriteLine("%s=%s" % (option, value))
+
+    if asset_dependencies:
+        count = 0
+        for dependency in asset_dependencies:
+            writer.WriteLine("AssetDependency{}={}".format(count, dependency))
+            count += 1
 
     if movieQueueCheckBox:
         writer.WriteLine("Frames=0")
