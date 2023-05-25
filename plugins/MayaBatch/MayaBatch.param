@@ -21,3 +21,11 @@ CategoryOrder=0
 Label=Maya 2022 Render Executable
 Default=C:\Program Files\Autodesk\Maya2022\bin\maya.exe
 Description=The path to the Maya 2022 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2023]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Label=Maya 2023 Render Executable
+Default=C:\Program Files\Autodesk\Maya2023\bin\maya.exe
+Description=The path to the Maya 2023 executable file used for rendering. Enter alternative paths on separate lines.
