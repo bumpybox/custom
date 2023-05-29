@@ -1,0 +1,29 @@
+[State]
+Type=Enum
+Items=Global Enabled;Disabled
+Category=Options
+CategoryOrder=0
+Index=0
+Label=State
+Default=Disabled
+Description=<html><head/><body><p>How this event plug-in should respond to events. If Global, all jobs and Workers will trigger the events for this plugin. If Disabled, no events are triggered for this plugin. Default: Disabled.</p></body></html>
+
+[JobID]
+Type=String
+Category=Configuration
+CategoryOrder=2
+Index=2
+Label=Job ID
+Default=
+Description=<html><head/><body><p>Job ID of the Job to requeue.</p></body></html>
+
+[RequeuePeriod]
+Type=integer
+Category=Configuration
+CategoryOrder=2
+Index=3
+Label=Requeue Period
+Default=3600
+Minimum=60
+Maximum=86400
+Description=<html><head/><body><p>Number of seconds between Requeues.</p></body></html>
