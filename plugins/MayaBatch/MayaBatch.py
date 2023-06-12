@@ -230,6 +230,17 @@ mel.eval('ogs -reloadTextures;')
 """
             )
 
+            self.LogInfo("Apply failed reference edits.")
+            self.send_to_maya(
+                """
+from maya import cmds
+for node in cmds.ls(type="reference", long=True):
+    if node == "sharedReferenceNode":
+        continue
+    cmds.referenceEdit(node, applyFailedEdits=True)
+"""
+            )
+
         # Rendering frames.
         self.LogInfo("Rendering frames: {} to {}.".format(
                 self.GetStartFrame(),
