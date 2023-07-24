@@ -1,31 +1,334 @@
-[RenderExecutable2019]
+[About]
+Type=label
+Label=About
+Category=About Plugin
+CategoryOrder=-1
+Index=0
+Default=Maya Batch Plugin for Deadline
+Description=Not configurable
+
+[ConcurrentTasks]
+Type=label
+Label=ConcurrentTasks
+Category=About Plugin
+CategoryOrder=-1
+Index=0
+Default=True
+Description=Not configurable
+
+[RenderExecutable2010_0]
 Type=multilinemultifilename
 Category=Render Executables
 CategoryOrder=0
+Index=0
+Label=Maya 2010 Render Executable
+Default=C:\Program Files\Autodesk\Maya2010\bin\MayaBatch.exe;C:\Program Files (x86)\Autodesk\Maya2010\bin\MayaBatch.exe;/usr/autodesk/maya2010-x64/bin/maya;/Applications/Autodesk/maya2010/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2010 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2011_0]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=1
+Label=Maya 2011 Render Executable
+Default=C:\Program Files\Autodesk\Maya2011\bin\MayaBatch.exe;C:\Program Files (x86)\Autodesk\Maya2011\bin\MayaBatch.exe;/usr/autodesk/maya2011-x64/bin/maya;/Applications/Autodesk/maya2011/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2011 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2011_5]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=2
+Label=Maya 2011.5 Render Executable
+Default=C:\Program Files\Autodesk\Maya2011.5\bin\MayaBatch.exe;C:\Program Files (x86)\Autodesk\Maya2011.5\bin\MayaBatch.exe;/usr/autodesk/maya2011.5-x64/bin/maya;/Applications/Autodesk/maya2011.5/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2011.5 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2012_0]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=3
+Label=Maya 2012 Render Executable
+Default=C:\Program Files\Autodesk\Maya2012\bin\MayaBatch.exe;C:\Program Files (x86)\Autodesk\Maya2012\bin\MayaBatch.exe;/usr/autodesk/maya2012-x64/bin/maya;/Applications/Autodesk/maya2012/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2012 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2012_5]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=4
+Label=Maya 2012.5 Render Executable
+Default=C:\Program Files\Autodesk\Maya2012.5\bin\MayaBatch.exe;C:\Program Files (x86)\Autodesk\Maya2012.5\bin\MayaBatch.exe;/usr/autodesk/maya2012.5-x64/bin/maya;/Applications/Autodesk/maya2012.5/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2012.5 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2013_0]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=5
+Label=Maya 2013 Render Executable
+Default=C:\Program Files\Autodesk\Maya2013\bin\MayaBatch.exe;C:\Program Files (x86)\Autodesk\Maya2013\bin\MayaBatch.exe;/usr/autodesk/maya2013-x64/bin/maya;/Applications/Autodesk/maya2013/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2013 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2013_5]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=6
+Label=Maya 2013.5 Render Executable
+Default=C:\Program Files\Autodesk\Maya2013.5\bin\MayaBatch.exe;C:\Program Files (x86)\Autodesk\Maya2013.5\bin\MayaBatch.exe;/usr/autodesk/maya2013.5-x64/bin/maya;/Applications/Autodesk/maya2013.5/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2013.5 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2014_0]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=7
+Label=Maya 2014 Render Executable
+Default=C:\Program Files\Autodesk\Maya2014\bin\MayaBatch.exe;/usr/autodesk/maya2014-x64/bin/maya;/Applications/Autodesk/maya2014/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2014 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2014_5]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=8
+Label=Maya 2014.5 Render Executable
+Default=C:\Program Files\Autodesk\Maya2014.5\bin\MayaBatch.exe;/usr/autodesk/maya2014.5-x64/bin/maya;/Applications/Autodesk/maya2014.5/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2014.5 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2015_0]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=9
+Label=Maya 2015 Render Executable
+Default=C:\Program Files\Autodesk\Maya2015\bin\MayaBatch.exe;/usr/autodesk/maya2015/bin/maya;/Applications/Autodesk/maya2015/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2015 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2015_5]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=10
+Label=Maya 2015.5 Render Executable
+Default=C:\Program Files\Autodesk\Maya2015.5\bin\MayaBatch.exe;/usr/autodesk/maya2015.5/bin/maya;/Applications/Autodesk/maya2015.5/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2015.5 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2016_0]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=11
+Label=Maya 2016 Render Executable
+Default=C:\Program Files\Autodesk\Maya2016\bin\MayaBatch.exe;/usr/autodesk/maya2016/bin/maya;/Applications/Autodesk/maya2016/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2016 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2016_5]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=12
+Label=Maya 2016.5 Render Executable
+Default=C:\Program Files\Autodesk\Maya2016.5\bin\MayaBatch.exe;/usr/autodesk/maya2016.5/bin/maya;/Applications/Autodesk/maya2016.5/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2016.5 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2017_0]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=13
+Label=Maya 2017 Render Executable
+Default=C:\Program Files\Autodesk\MayaIO2017\bin\MayaBatch.exe;/usr/autodesk/mayaIO2017/bin/maya;/Applications/Autodesk/mayaIO2017/Maya.app/Contents/bin/maya;C:\Program Files\Autodesk\Maya2017\bin\MayaBatch.exe;/usr/autodesk/maya2017/bin/maya;/Applications/Autodesk/maya2017/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2017 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2017_5]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=14
+Label=Maya 2017.5 Render Executable
+Default=C:\Program Files\Autodesk\Maya2017.5\bin\MayaBatch.exe;/usr/autodesk/maya2017.5/bin/maya;/Applications/Autodesk/maya2017.5/Maya.app/Contents/bin/maya
+Description=The path to the Maya 2017.5 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2018_0]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=15
+Label=Maya 2018 Render Executable
+Default=C:\Program Files\Autodesk\Maya2018\bin\MayaBatch.exe;/usr/autodesk/maya2018/bin/maya;/Applications/Autodesk/maya2018/Maya.app/Contents/bin/maya;/usr/autodesk/mayaIO2018/bin/maya
+Description=The path to the Maya 2018 executable file used for rendering. Enter alternative paths on separate lines.
+
+[RenderExecutable2019_0]
+Type=multilinemultifilename
+Category=Render Executables
+CategoryOrder=0
+Index=16
 Label=Maya 2019 Render Executable
-Default=C:\Program Files\Autodesk\Maya2019\bin\maya.exe
+Default=C:\Program Files\Autodesk\Maya2019\bin\MayaBatch.exe;/usr/autodesk/maya2019/bin/maya;/Applications/Autodesk/maya2019/Maya.app/Contents/bin/maya;/usr/autodesk/mayaIO2019/bin/maya
 Description=The path to the Maya 2019 executable file used for rendering. Enter alternative paths on separate lines.
 
-[RenderExecutable2020]
+[RenderExecutable2020_0]
 Type=multilinemultifilename
 Category=Render Executables
 CategoryOrder=0
+Index=17
 Label=Maya 2020 Render Executable
-Default=C:\Program Files\Autodesk\Maya2020\bin\maya.exe
+Default=C:\Program Files\Autodesk\Maya2020\bin\MayaBatch.exe;/usr/autodesk/maya2020/bin/maya;/Applications/Autodesk/maya2020/Maya.app/Contents/bin/maya;/usr/autodesk/mayaIO2020/bin/maya
 Description=The path to the Maya 2020 executable file used for rendering. Enter alternative paths on separate lines.
 
-[RenderExecutable2022]
+[RenderExecutable2022_0]
 Type=multilinemultifilename
 Category=Render Executables
 CategoryOrder=0
+Index=18
 Label=Maya 2022 Render Executable
-Default=C:\Program Files\Autodesk\Maya2022\bin\maya.exe
+Default=C:\Program Files\Autodesk\Maya2022\bin\MayaBatch.exe;/usr/autodesk/maya2022/bin/maya;/Applications/Autodesk/maya2022/Maya.app/Contents/bin/maya;/usr/autodesk/mayaIO2022/bin/maya
 Description=The path to the Maya 2022 executable file used for rendering. Enter alternative paths on separate lines.
 
-[RenderExecutable2023]
+[RenderExecutable2023_0]
 Type=multilinemultifilename
 Category=Render Executables
 CategoryOrder=0
+Index=19
 Label=Maya 2023 Render Executable
-Default=C:\Program Files\Autodesk\Maya2023\bin\maya.exe
+Default=C:\Program Files\Autodesk\Maya2023\bin\MayaBatch.exe;/usr/autodesk/maya2023/bin/maya;/Applications/Autodesk/maya2023/Maya.app/Contents/bin/maya;/usr/autodesk/mayaIO2023/bin/maya
 Description=The path to the Maya 2023 executable file used for rendering. Enter alternative paths on separate lines.
+
+[MaxwellInteractiveSlaves]
+Type=slavelist
+Category=Maxwell For Maya (version 2 and later)
+CategoryOrder=1
+Index=0
+Label=Workers To Use Interactive License
+Default=
+Description=A list of Workers that should use an interactive Maxwell license instead of a render license. Use a , to separate multiple Worker names, for example: worker001,worker002,worker003
+
+[EnablePathMapping]
+Type=boolean
+Category=Path Mapping For Scene Files (For Mixed Farms)
+CategoryOrder=2
+CategoryIndex=0
+Label=Enable Path Mapping
+Default=true
+Description=If enabled, path mapping will be performed on the contents of the Maya scene file.
+
+[PathMappingMode]
+Type=enum
+Values=Use dirmap Command;Text Replacement (.ma files only)
+Category=Path Mapping For Scene Files (For Mixed Farms)
+CategoryOrder=2
+CategoryIndex=1
+Label=Path Mapping Mode
+Default=Use dirmap Command
+Description=The first option uses Maya's 'dirmap' command to map paths when the scene is loaded, which works on .ma and.mb files. The second option creates a local copy of the .ma file, and uses text replacement on the file to map paths.
+
+[XGenPathMapping]
+Type=boolean
+Category=Path Mapping For XGenFiles
+CategoryOrder=2
+CategoryIndex=2
+Label=Enable XGen Path Mapping
+Default=true
+Description=If enabled, path mapping will be performed on the contents of XGen files.
+
+[SuppressWarnings]
+Type=boolean
+Category=Logging
+CategoryOrder=3
+CategoryIndex=0
+Label=Suppress Warning Messages
+Default=false
+Description=If enabled, warning messages printed out by Maya will not be included in the render log.
+
+[SilenceSceneLoadErrors]
+Type=boolean
+Category=Logging
+CategoryOrder=3
+CategoryIndex=1
+Label=Silence Scene Load Errors
+Default=false
+Description=If enabled, errors that occur when loading a scene file are silenced by Maya and will not be included in the render log.
+
+[WriteScriptToLog]
+Type=boolean
+Category=Logging
+CategoryOrder=3
+CategoryIndex=2
+Label=Log Script Contents to Render Log
+Default=false
+Description=If enabled, or if an error occurs, the full script that Deadline is passing to Maya will be written to the render log. This functionality is useful for debugging purposes, and providing additional information to support.
+
+[LimitThreadsToCPUAffinity]
+Type=boolean
+Category=CPU Affinity
+CategoryOrder=4
+CategoryIndex=0
+Label=Limit Threads to CPU Affinity
+Default=false
+
+[AbortOnArnoldLicenseFail]
+Type=boolean
+Category=Arnold Options
+CategoryOrder=5
+CategoryIndex=0
+Label=Abort On Arnold License Fail
+Default=true
+Description=If enabled, the render will fail if Arnold cannot get a license. If disabled, Arnold will will render with a watermark if it cannot get a license (Only applies when Arnold is the Renderer).
+
+[RemoteAssetPaths]
+Type=multilinestring
+Category=Local Asset Caching
+CategoryOrder=6
+CategoryIndex=0
+Label=Remote Asset Path
+Default=//;X:;Y:;Z:
+Description=Assets whose paths begin with these paths will be copied to the Worker's local asset cache directory and be remapped in the scene file.
+
+[SlaveLACDirectoryWindows]
+Type=folder
+Category=Local Asset Caching
+CategoryOrder=6
+CategoryIndex=1
+Label=Worker LAC Directory (Windows)
+Default=
+Description=Windows Worker's local storage location for cached assets (accepts environment variables). If blank, defaults to Deadline's temp folder on the Worker. ie. %temp%/Thinkbox/DeadlineX/temp/MayaCache
+
+[SlaveLACDirectoryOSX]
+Type=folder
+Category=Local Asset Caching
+CategoryOrder=6
+CategoryIndex=2
+Label=Worker LAC Directory (OSX)
+Default=
+Description=OSX Worker's local storage location for cached assets (accepts environment variables). If blank, defaults to Deadline's temp folder on the Worker. ie. /Users/home/[user]/.local/share/Thinkbox/DeadlineX/temp/MayaCache
+
+[SlaveLACDirectoryLinux]
+Type=folder
+Category=Local Asset Caching
+CategoryOrder=6
+CategoryIndex=3
+Label=Worker LAC Directory (Linux)
+Default=
+Description=Linux Worker's local storage location for cached assets (accepts environment variables). If blank, defaults to Deadline's temp folder on the Worker. ie. /home/[user]/.local/share/Thinkbox/DeadlineX/temp/MayaCache
+
+[SlaveLACDaysToDelete]
+Type=integer
+Category=Local Asset Caching
+CategoryOrder=6
+CategoryIndex=4
+Label=Days until Cache Delete
+Minimum=0
+Maximum=99
+Default=5
+Description=Cache files will be deleted once this many days has been reached in between accesses.
+
+[UsePython2]
+Type=boolean
+Category=Python
+CategoryOrder=7
+CategoryIndex=0
+Label=Use Python 2 (Not macOS)
+Default=false
+Description=Description=If enabled, will use Maya's Python 2. Option only available for Maya 2022.

@@ -10,5 +10,4 @@ def __main__(deadlinePlugin):
     }
 
     for key, value in env.items():
-        deadlinePlugin.LogInfo("Setting {} to:\n{}".format(key, value))
         deadlinePlugin.SetProcessEnvironmentVariable(key, value)
