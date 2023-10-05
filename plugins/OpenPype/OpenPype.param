@@ -19,7 +19,7 @@ Description=Path or paths to directories where multiple versions of OpenPype mig
 [OpenPypeExecutable]
 Type=multilinemultifilename
 Label=OpenPype Executable
-Category=OpenPype Executable
+Category=OpenPype Executables
 CategoryOrder=1
 Index=0
 Default=
