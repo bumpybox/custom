@@ -80,7 +80,11 @@ class FTrackEventListener (DeadlineEventListener):
         # Its necessary to run the pype python executable to have the
         # ftrack_api module compatible.
         args = [
-            "K:/python.bat",
+            os.path.join(
+                RepositoryUtils.GetEventPluginDirectory("FTrack"),
+                "run_openpype_console.bat"
+            ),
+            "run",
             os.path.join(
                 RepositoryUtils.GetEventPluginDirectory("FTrack"),
                 "set_task_status.py"
