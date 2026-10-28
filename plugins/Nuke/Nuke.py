@@ -32,6 +32,13 @@ class NukePlugin (DeadlinePlugin):
     Process = None
     ProcessName = "Nuke"
     
+    # Output frame verification settings (only enabled for non-script batch mode jobs, see StartJob).
+    VerifyOutputFrames = False
+    VerifyOutputMinFileSize = 1
+    VerifyOutputFreshness = True
+    VerifyOutputRetries = 3
+    VerifyOutputRetryWait = 5
+    
     ## Utility functions
     def WritePython( self, statement ):
         self.FlushMonitoredManagedProcessStdout( self.ProcessName )
@@ -207,12 +214,47 @@ class NukePlugin (DeadlinePlugin):
         if self.BatchMode:
             self.Process = NukeProcess( self, self.Version, self.BatchMode, self.ScriptJob )
             self.StartMonitoredManagedProcess( self.ProcessName, self.Process )
+            
+            if not self.ScriptJob:
+                self.VerifyOutputFrames = self.GetBooleanPluginInfoEntryWithDefault( "VerifyOutputFrames", self.GetBooleanConfigEntryWithDefault( "VerifyOutputFrames", True ) )
+                if self.VerifyOutputFrames:
+                    self.VerifyOutputMinFileSize = self.GetIntegerConfigEntryWithDefault( "VerifyOutputMinFileSize", 1 )
+                    self.VerifyOutputFreshness = self.GetBooleanConfigEntryWithDefault( "VerifyOutputFreshness", True )
+                    self.VerifyOutputRetries = self.GetIntegerConfigEntryWithDefault( "VerifyOutputRetries", 3 )
+                    self.VerifyOutputRetryWait = self.GetIntegerConfigEntryWithDefault( "VerifyOutputRetryWait", 5 )
+                    
+                    self.LogInfo( "Output frame verification enabled" )
+                    self.WritePython( 'import sys; sys.path.insert(0, "%s"); import deadline_frame_check as _dl_fc' % self.GetPluginDirectory().replace( "\\", "/" ) )
         else:
             if self.ScriptJob:
                 self.FailRender( "Script Jobs are only supported in Batch Mode." )
+            elif self.GetBooleanPluginInfoEntryWithDefault( "VerifyOutputFrames", self.GetBooleanConfigEntryWithDefault( "VerifyOutputFrames", True ) ):
+                self.LogWarning( "Output frame verification is only supported in Batch Mode; skipping." )
     
     def IsSingleFramesOnly( self ):
         return self.GetBooleanPluginInfoEntryWithDefault( "WriteNodesAsSeparateJobs", False )
+    
+    def _FrameCheckQuote( self, value ):
+        # Quote a string so it can be safely embedded in a single-line python statement.
+        return "\"%s\"" % str( value ).replace( "\\", "\\\\" ).replace( "\"", "\\\"" )
+    
+    def _FrameCheckSnapshot( self, nodeNames, startFrame, endFrame ):
+        # Record the expected output files before rendering. nodeNames of None means all enabled write nodes.
+        if not self.VerifyOutputFrames:
+            return
+        
+        nodeList = "None"
+        if nodeNames is not None:
+            nodeList = "[" + ", ".join( [ self._FrameCheckQuote( name.strip() ) for name in nodeNames ] ) + "]"
+        
+        self.WritePython( "_dl_fc_state = _dl_fc.snapshot(%s, %d, %d)" % ( nodeList, startFrame, endFrame ) )
+    
+    def _FrameCheckVerify( self ):
+        # Verify the expected output files after rendering. The Nuke stdout handler fails the task on failure.
+        if not self.VerifyOutputFrames:
+            return
+        
+        self.WritePython( "_dl_fc.verify(_dl_fc_state, min_size=%d, require_fresh=%s, retries=%d, retry_wait=%d)" % ( self.VerifyOutputMinFileSize, "True" if self.VerifyOutputFreshness else "False", self.VerifyOutputRetries, self.VerifyOutputRetryWait ) )
     
     def RenderTasks( self ):
         
@@ -231,7 +273,9 @@ class NukePlugin (DeadlinePlugin):
                     writeNodeStartFrame = self.GetIntegerPluginInfoEntry( "WriteNode" + frame + "StartFrame" )
                     writeNodeEndFrame = self.GetIntegerPluginInfoEntry( "WriteNode" + frame + "EndFrame" )
                     self.LogInfo( "Rendering write node " + writeNodeName)
+                    self._FrameCheckSnapshot( [ writeNodeName ], writeNodeStartFrame, writeNodeEndFrame )
                     self.WritePython( "nuke.execute(\"%s\", %d, %d, 1, continueOnError=%s)" % ( writeNodeName, writeNodeStartFrame, writeNodeEndFrame, continueOnError ) )
+                    self._FrameCheckVerify()
                 else:
                     self.RunManagedProcess( NukeProcess( self, self.Version, self.BatchMode, self.ScriptJob ) )
             else:
@@ -259,7 +303,9 @@ class NukePlugin (DeadlinePlugin):
                                     scriptContents = scriptContents + ("nuke.execute(\"%s\", %d, %d, 1, continueOnError=%s); print(\"Frame %d (%d of %d)\")\n" % (writeNodeName, frame, frame, continueOnError, frame, frameCount, totalFrames))
                             
                             # Now execute the full script.
+                            self._FrameCheckSnapshot( [ writeNodeName ], self.GetStartFrame(), self.GetEndFrame() )
                             self.WritePython(scriptContents)
+                            self._FrameCheckVerify()
                     else:
                         # Executing the root node will render all the enabled write nodes for the specified frame range
                         self.LogInfo( "Rendering all enabled write nodes" )
@@ -275,7 +321,9 @@ class NukePlugin (DeadlinePlugin):
                                 scriptContents = scriptContents + ("nuke.execute(nuke.Root(), %d, %d, 1, continueOnError=%s); print(\"Frame %d (%d of %d)\")\n" % (frame, frame, continueOnError, frame, frameCount, totalFrames))
                                 
                         # Now execute the full script.
+                        self._FrameCheckSnapshot( None, self.GetStartFrame(), self.GetEndFrame() )
                         self.WritePython(scriptContents)
+                        self._FrameCheckVerify()
                 else:
                     self.Process = NukeProcess( self, self.Version, self.BatchMode, self.ScriptJob )
                     self.RunManagedProcess( self.Process )
@@ -366,6 +414,7 @@ class NukeProcess (ManagedProcess):
         #self.AddStdoutHandler( ".* seconds to execute", self.HandleProgress )
         #self.AddStdoutHandler( ".* took [0-9]*\\.[0-9]* seconds", self.HandleProgress )
         self.AddStdoutHandlerCallback( "Frame [0-9]+ \\(([0-9]+) of ([0-9]+)\\)" ).HandleCallback += self.HandleProgress
+        self.AddStdoutHandlerCallback( "DEADLINE_FRAME_CHECK_FAILED: (.*)" ).HandleCallback += self.HandleFrameCheckFailed
 
         # Handle QuickTime popup dialog
         # "QuickTime does not support the current Display Setting.  Please change it and restart this application."
@@ -624,6 +673,10 @@ class NukeProcess (ManagedProcess):
             self.deadlinePlugin.FailRender( self.GetRegexMatch( 0 ) )
         else:
             self.deadlinePlugin.LogWarning( "Skipping error detection as 'Continue On Error' is enabled." )
+
+    def HandleFrameCheckFailed( self ):
+        # Always fail, even if 'Continue On Error' is enabled, since the frames are missing or invalid.
+        self.deadlinePlugin.FailRender( "Output frame verification failed: " + self.GetRegexMatch( 1 ) )
 
     def HandleProgress( self ):
         currFrame = int( self.GetRegexMatch( 1 ) )

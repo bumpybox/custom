@@ -240,3 +240,51 @@ CategoryIndex=0
 Label=Enable Path Mapping
 Default=true
 Description=If enabled, a temporary Nuke file will be created locally on the slave for rendering because Deadline does the path mapping directly in the Nuke file. This feature can be turned off if there are no Path Mapping entries defined in the Repository Options.
+
+[VerifyOutputFrames]
+Type=boolean
+Category=Output Verification
+CategoryOrder=80
+CategoryIndex=0
+Label=Verify Output Frames
+Default=true
+Description=If enabled (Batch Mode only), the expected output files are checked after each render and the task fails if any are missing or invalid. Jobs can override this setting.
+
+[VerifyOutputMinFileSize]
+Type=integer
+Minimum=0
+Category=Output Verification
+CategoryOrder=80
+CategoryIndex=1
+Label=Minimum Output File Size (bytes)
+Default=1
+Description=Output files smaller than this size, in bytes, are treated as invalid.
+
+[VerifyOutputFreshness]
+Type=boolean
+Category=Output Verification
+CategoryOrder=80
+CategoryIndex=2
+Label=Require Files To Be Rewritten
+Default=true
+Description=If enabled, the task fails if an expected output file already existed before rendering and was not rewritten by this render (for example a stale frame from a previous render).
+
+[VerifyOutputRetries]
+Type=integer
+Minimum=0
+Category=Output Verification
+CategoryOrder=80
+CategoryIndex=3
+Label=Verification Retries
+Default=3
+Description=The number of times to re-check files that fail verification before failing the task. This helps with network share delays.
+
+[VerifyOutputRetryWait]
+Type=integer
+Minimum=0
+Category=Output Verification
+CategoryOrder=80
+CategoryIndex=4
+Label=Verification Retry Wait (seconds)
+Default=5
+Description=The number of seconds to wait between verification retries.

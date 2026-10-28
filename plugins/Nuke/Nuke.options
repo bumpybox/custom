@@ -151,6 +151,16 @@ Description=If Performance Profiler is enabled, define the directory on the netw
 Required=false
 DisableIfBlank=true
 
+[VerifyOutputFrames]
+Type=boolean
+Label=Verify Output Frames
+Category=Rendering Options
+Index=15
+Default=True
+Description=If checked, the output files are verified after rendering (Batch Mode only), and the task fails if any expected frame is missing, empty, or was not rewritten. Overrides the plugin configuration default.
+Required=false
+DisableIfBlank=true
+
 [ScriptJob]
 Type=boolean
 Label=Script Job
