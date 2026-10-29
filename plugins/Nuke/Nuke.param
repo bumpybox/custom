@@ -288,3 +288,13 @@ CategoryIndex=4
 Label=Verification Retry Wait (seconds)
 Default=5
 Description=The number of seconds to wait between verification retries.
+
+[VerifyOutputRenderRetries]
+Type=integer
+Minimum=0
+Category=Output Verification
+CategoryOrder=80
+CategoryIndex=5
+Label=Re-render Attempts
+Default=2
+Description=Number of times failed or missing frames are re-rendered within the same task before the task is failed. Set to 0 to fail immediately.

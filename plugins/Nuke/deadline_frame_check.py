@@ -7,7 +7,11 @@ Usage (driven by Nuke.py over stdin)::
 
     state = snapshot(["WriteNode1"], 1001, 1010)   # or snapshot(None, 1001, 1010)
     nuke.execute("WriteNode1", 1001, 1010, 1)
-    verify(state, min_size=1, require_fresh=True, retries=3, retry_wait=5)
+    verify(state, min_size=1, require_fresh=True, retries=3, retry_wait=5,
+           render_retries=2)
+
+If files are missing or invalid, only the failed frames are re-rendered (up to
+``render_retries`` attempts) before the check is reported as failed.
 
 The module is deliberately fail-open: any internal problem prints a
 "Frame check: skipped ..." line and never raises. None of the printed text may
@@ -39,7 +43,8 @@ class FrameCheckState(object):
     """Expected output files and their pre-render stat."""
 
     def __init__(self):
-        # List of dicts: path, node, frame, pre (None or (size, mtime)).
+        # List of dicts: path, node, frame, pre (None or (size, mtime)),
+        # view (None or str), sequence (bool), first/last (node frame range).
         self.entries = []
 
 
@@ -232,6 +237,10 @@ def snapshot(node_names, first, last):
                             "node": node.fullName(),
                             "frame": frame,
                             "pre": _stat(path),
+                            "view": view,
+                            "sequence": is_sequence,
+                            "first": lo,
+                            "last": hi,
                         }
                     )
 
@@ -268,10 +277,99 @@ def _refresh_directories(entries):
             pass
 
 
-def verify(state, min_size=1, require_fresh=True, retries=3, retry_wait=5):
+def _check(entries, min_size, require_fresh, retries, retry_wait):
+    """Check entries, re-statting failures `retries` times.
+
+    Returns a list of (entry, reason) for entries that still fail.
+    """
+    failures = []
+    for entry in entries:
+        reason = _failure_reason(entry, min_size, require_fresh)
+        if reason:
+            failures.append((entry, reason))
+
+    attempt = 0
+    while failures and attempt < int(retries):
+        attempt += 1
+        time.sleep(max(0, float(retry_wait)))
+        _refresh_directories([entry for entry, _ in failures])
+        still_failing = []
+        for entry, _ in failures:
+            reason = _failure_reason(entry, min_size, require_fresh)
+            if reason:
+                still_failing.append((entry, reason))
+        failures = still_failing
+    return failures
+
+
+def _compress_ranges(frames):
+    """Compress frame numbers into sorted contiguous inclusive (a, b) ranges."""
+    ranges = []
+    for frame in sorted(set(frames)):
+        if ranges and frame == ranges[-1][1] + 1:
+            ranges[-1] = (ranges[-1][0], frame)
+        else:
+            ranges.append((frame, frame))
+    return ranges
+
+
+def _render_ranges(failures):
+    """Return a list of (node full name, view, first, last) to re-render."""
+    order = []
+    groups = {}
+    for entry, _ in failures:
+        key = (entry["node"], entry.get("view"))
+        if key not in groups:
+            groups[key] = {"frames": [], "spans": []}
+            order.append(key)
+        if entry.get("sequence", True):
+            groups[key]["frames"].append(entry["frame"])
+        else:
+            groups[key]["spans"].append(
+                (entry.get("first", entry["frame"]), entry.get("last", entry["frame"]))
+            )
+
+    result = []
+    seen = set()
+    for key in order:
+        spans = _compress_ranges(groups[key]["frames"]) + groups[key]["spans"]
+        for first, last in spans:
+            item = (key[0], key[1], first, last)
+            if item in seen:
+                continue
+            seen.add(item)
+            result.append(item)
+    return result
+
+
+def _re_render(failures):
+    """Re-render the frames of the failed entries. Never raises."""
+    for full_name, view, first, last in _render_ranges(failures):
+        node = nuke.toNode(full_name)
+        if node is None:
+            _out("Frame check: warning, node '%s' not found for re-render" % full_name)
+            continue
+        message = "Frame check: re-rendering %s frames %d-%d" % (full_name, first, last)
+        if view:
+            message += " view %s" % view
+        _out(message)
+        try:
+            if view:
+                nuke.execute(node, first, last, 1, [view])
+            else:
+                nuke.execute(node, first, last, 1)
+        except Exception as e:
+            _out(
+                "Frame check: re-render of %s frames %d-%d raised %s"
+                % (full_name, first, last, repr(e))
+            )
+
+
+def verify(state, min_size=1, require_fresh=True, retries=3, retry_wait=5, render_retries=0):
     """Check that every expected output file exists and was written.
 
-    Prints DEADLINE_FRAME_CHECK_FAILED / DEADLINE_FRAME_CHECK_PASSED.
+    Failed frames are re-rendered up to ``render_retries`` times before the
+    check fails. Prints DEADLINE_FRAME_CHECK_FAILED / DEADLINE_FRAME_CHECK_PASSED.
     Never raises.
     """
     try:
@@ -285,26 +383,32 @@ def verify(state, min_size=1, require_fresh=True, retries=3, retry_wait=5):
             _out("Frame check: no write nodes/output files resolved, skipping verification")
             return
 
-        failures = []
-        for entry in entries:
-            reason = _failure_reason(entry, min_size, require_fresh)
-            if reason:
-                failures.append((entry, reason))
+        render_retries = max(0, int(render_retries))
+        failures = _check(entries, min_size, require_fresh, retries, retry_wait)
 
         attempt = 0
-        while failures and attempt < int(retries):
+        re_rendered = set()
+        while failures and attempt < render_retries:
             attempt += 1
-            time.sleep(max(0, float(retry_wait)))
-            _refresh_directories([entry for entry, _ in failures])
-            still_failing = []
-            for entry, _ in failures:
-                reason = _failure_reason(entry, min_size, require_fresh)
-                if reason:
-                    still_failing.append((entry, reason))
-            failures = still_failing
+            _out(
+                "Frame check: re-rendering %d failed output files (attempt %d of %d)"
+                % (len(failures), attempt, render_retries)
+            )
+            _re_render(failures)
+            re_rendered.update(entry["path"] for entry, _ in failures)
+            failures = _check(
+                [entry for entry, _ in failures],
+                min_size,
+                require_fresh,
+                retries,
+                retry_wait,
+            )
 
         if not failures:
-            _out("DEADLINE_FRAME_CHECK_PASSED: %d output files verified" % total)
+            message = "DEADLINE_FRAME_CHECK_PASSED: %d output files verified" % total
+            if re_rendered:
+                message += " (re-rendered %d files)" % len(re_rendered)
+            _out(message)
             return
 
         for entry, reason in failures[:MAX_FAILURE_LINES]:
@@ -315,9 +419,12 @@ def verify(state, min_size=1, require_fresh=True, retries=3, retry_wait=5):
         if len(failures) > MAX_FAILURE_LINES:
             _out("... and %d more" % (len(failures) - MAX_FAILURE_LINES))
 
-        _out(
+        message = (
             "DEADLINE_FRAME_CHECK_FAILED: %d of %d expected output files missing or invalid"
             % (len(failures), total)
         )
+        if render_retries > 0:
+            message += " after %d re-render attempts" % render_retries
+        _out(message)
     except Exception as e:
         _skipped(e)

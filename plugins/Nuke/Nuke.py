@@ -40,6 +40,7 @@ class NukePlugin (DeadlinePlugin):
     VerifyOutputFreshness = True
     VerifyOutputRetries = 3
     VerifyOutputRetryWait = 5
+    VerifyOutputRenderRetries = 2
     
     ## Utility functions
     def WritePython( self, statement ):
@@ -224,6 +225,7 @@ class NukePlugin (DeadlinePlugin):
                     self.VerifyOutputFreshness = self.GetBooleanConfigEntryWithDefault( "VerifyOutputFreshness", True )
                     self.VerifyOutputRetries = self.GetIntegerConfigEntryWithDefault( "VerifyOutputRetries", 3 )
                     self.VerifyOutputRetryWait = self.GetIntegerConfigEntryWithDefault( "VerifyOutputRetryWait", 5 )
+                    self.VerifyOutputRenderRetries = self.GetIntegerConfigEntryWithDefault( "VerifyOutputRenderRetries", 2 )
                     
                     self.LogInfo( "Output frame verification enabled" )
                     self.WritePython( 'import sys; sys.path.insert(0, "%s"); import deadline_frame_check as _dl_fc' % self.GetPluginDirectory().replace( "\\", "/" ) )
@@ -256,7 +258,7 @@ class NukePlugin (DeadlinePlugin):
         if not self.VerifyOutputFrames:
             return
         
-        self.WritePython( "_dl_fc.verify(_dl_fc_state, min_size=%d, require_fresh=%s, retries=%d, retry_wait=%d)" % ( self.VerifyOutputMinFileSize, "True" if self.VerifyOutputFreshness else "False", self.VerifyOutputRetries, self.VerifyOutputRetryWait ) )
+        self.WritePython( "_dl_fc.verify(_dl_fc_state, min_size=%d, require_fresh=%s, retries=%d, retry_wait=%d, render_retries=%d)" % ( self.VerifyOutputMinFileSize, "True" if self.VerifyOutputFreshness else "False", self.VerifyOutputRetries, self.VerifyOutputRetryWait, self.VerifyOutputRenderRetries ) )
     
     def RenderTasks( self ):
         
