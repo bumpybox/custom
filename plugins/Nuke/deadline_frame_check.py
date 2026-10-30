@@ -8,10 +8,16 @@ Usage (driven by Nuke.py over stdin)::
     state = snapshot(["WriteNode1"], 1001, 1010)   # or snapshot(None, 1001, 1010)
     nuke.execute("WriteNode1", 1001, 1010, 1)
     verify(state, min_size=1, require_fresh=True, retries=3, retry_wait=5,
-           render_retries=2)
+           render_retries=2, settle_seconds=15, check_header=True)
 
 If files are missing or invalid, only the failed frames are re-rendered (up to
 ``render_retries`` attempts) before the check is reported as failed.
+
+If ``settle_seconds`` is greater than 0, files that pass the first (stat based)
+check are checked again after that many seconds using a fresh directory listing
+and by opening each file. This bypasses the Windows SMB client metadata cache.
+With ``check_header`` the re-check also validates the OpenEXR magic number of
+``.exr`` files.
 
 The module is deliberately fail-open: any internal problem prints a
 "Frame check: skipped ..." line and never raises. None of the printed text may
@@ -32,6 +38,7 @@ except ImportError:  # pragma: no cover - only happens outside of Nuke.
     nuke = None
 
 MAX_FAILURE_LINES = 50
+EXR_MAGIC = b"\x76\x2f\x31\x01"
 
 _PADDING_RE = re.compile(r"%\d*d")
 _PRINTF_RE = re.compile(r"%(\d*)d")
@@ -202,6 +209,36 @@ def _stat(path):
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
+def _log_expected_files(state):
+    """Print one line per Write node with the first/last resolved path."""
+    order = []
+    groups = {}
+    for entry in state.entries:
+        node = entry["node"]
+        if node not in groups:
+            groups[node] = []
+            order.append(node)
+        groups[node].append(entry)
+
+    for node in order:
+        node_entries = groups[node]
+        first_path = node_entries[0]["path"]
+        last_path = node_entries[-1]["path"]
+        if len(node_entries) > 1:
+            paths = "%s .. %s" % (first_path, last_path)
+        else:
+            paths = first_path
+        message = "Frame check: expecting %d files from node %s: %s" % (
+            len(node_entries),
+            node,
+            paths,
+        )
+        existing = len([e for e in node_entries if e["pre"] is not None])
+        if existing > 0:
+            message += " (%d already exist and must be rewritten)" % existing
+        _out(message)
+
+
 def snapshot(node_names, first, last):
     """Resolve expected output files and record their state before rendering.
 
@@ -244,6 +281,7 @@ def snapshot(node_names, first, last):
                         }
                     )
 
+        _log_expected_files(state)
         return state
     except Exception as e:
         _skipped(e)
@@ -300,6 +338,104 @@ def _check(entries, min_size, require_fresh, retries, retry_wait):
                 still_failing.append((entry, reason))
         failures = still_failing
     return failures
+
+
+def _uncached_failure_reason(path, min_size, check_header):
+    """Open the file and return None if OK, otherwise a short reason string."""
+    try:
+        handle = open(path, "rb")
+    except Exception:
+        return "cannot be opened"
+    try:
+        try:
+            head = handle.read(4)
+            size = os.fstat(handle.fileno()).st_size
+        except Exception:
+            return "cannot be opened"
+    finally:
+        handle.close()
+
+    if size < min_size:
+        if size == 0:
+            return "empty file"
+        return "too small (%d bytes)" % size
+
+    if check_header and path.lower().endswith(".exr") and head != EXR_MAGIC:
+        return "invalid EXR header"
+
+    return None
+
+
+def _check_uncached(entries, min_size, check_header):
+    """Check entries using a fresh directory listing and by opening each file.
+
+    Returns a list of (entry, reason) for entries that fail.
+    """
+    by_directory = {}
+    directory_order = []
+    for entry in entries:
+        directory = os.path.dirname(entry["path"])
+        if directory not in by_directory:
+            by_directory[directory] = []
+            directory_order.append(directory)
+        by_directory[directory].append(entry)
+
+    failures = []
+    for directory in directory_order:
+        try:
+            names = set(os.path.normcase(name) for name in os.listdir(directory))
+        except Exception:
+            for entry in by_directory[directory]:
+                failures.append((entry, "directory not listable"))
+            continue
+
+        for entry in by_directory[directory]:
+            name = os.path.normcase(os.path.basename(entry["path"]))
+            if name not in names:
+                failures.append((entry, "missing from directory listing"))
+                continue
+            reason = _uncached_failure_reason(entry["path"], min_size, check_header)
+            if reason:
+                failures.append((entry, reason))
+    return failures
+
+
+def _full_check(
+    entries,
+    min_size,
+    require_fresh,
+    retries,
+    retry_wait,
+    settle_seconds,
+    check_header,
+):
+    """Stat based check followed by an optional delayed uncached re-check.
+
+    Returns a list of (entry, reason) for entries that still fail.
+    """
+    failures_a = _check(entries, min_size, require_fresh, retries, retry_wait)
+
+    failures_b = []
+    failed_paths = set(entry["path"] for entry, _ in failures_a)
+    passed = [entry for entry in entries if entry["path"] not in failed_paths]
+    if settle_seconds > 0 and passed:
+        _out(
+            "Frame check: waiting %d seconds before uncached re-check of %d files"
+            % (settle_seconds, len(passed))
+        )
+        time.sleep(settle_seconds)
+
+        failures_b = _check_uncached(passed, min_size, check_header)
+        attempt = 0
+        while failures_b and attempt < int(retries):
+            attempt += 1
+            time.sleep(max(0, float(retry_wait)))
+            _refresh_directories([entry for entry, _ in failures_b])
+            failures_b = _check_uncached(
+                [entry for entry, _ in failures_b], min_size, check_header
+            )
+
+    return failures_a + failures_b
 
 
 def _compress_ranges(frames):
@@ -365,11 +501,23 @@ def _re_render(failures):
             )
 
 
-def verify(state, min_size=1, require_fresh=True, retries=3, retry_wait=5, render_retries=0):
+def verify(
+    state,
+    min_size=1,
+    require_fresh=True,
+    retries=3,
+    retry_wait=5,
+    render_retries=0,
+    settle_seconds=0,
+    check_header=True,
+):
     """Check that every expected output file exists and was written.
 
     Failed frames are re-rendered up to ``render_retries`` times before the
-    check fails. Prints DEADLINE_FRAME_CHECK_FAILED / DEADLINE_FRAME_CHECK_PASSED.
+    check fails. If ``settle_seconds`` > 0, files that pass the stat check are
+    re-checked after that delay with a fresh directory listing and by opening
+    them (``check_header`` also validates the OpenEXR header of .exr files).
+    Prints DEADLINE_FRAME_CHECK_FAILED / DEADLINE_FRAME_CHECK_PASSED.
     Never raises.
     """
     try:
@@ -384,7 +532,17 @@ def verify(state, min_size=1, require_fresh=True, retries=3, retry_wait=5, rende
             return
 
         render_retries = max(0, int(render_retries))
-        failures = _check(entries, min_size, require_fresh, retries, retry_wait)
+        settle_seconds = max(0, int(settle_seconds))
+        check_header = bool(check_header)
+        failures = _full_check(
+            entries,
+            min_size,
+            require_fresh,
+            retries,
+            retry_wait,
+            settle_seconds,
+            check_header,
+        )
 
         attempt = 0
         re_rendered = set()
@@ -396,18 +554,22 @@ def verify(state, min_size=1, require_fresh=True, retries=3, retry_wait=5, rende
             )
             _re_render(failures)
             re_rendered.update(entry["path"] for entry, _ in failures)
-            failures = _check(
+            failures = _full_check(
                 [entry for entry, _ in failures],
                 min_size,
                 require_fresh,
                 retries,
                 retry_wait,
+                settle_seconds,
+                check_header,
             )
 
         if not failures:
             message = "DEADLINE_FRAME_CHECK_PASSED: %d output files verified" % total
             if re_rendered:
                 message += " (re-rendered %d files)" % len(re_rendered)
+            if settle_seconds > 0:
+                message += " (re-checked after %ds settle)" % settle_seconds
             _out(message)
             return
 

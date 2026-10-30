@@ -298,3 +298,22 @@ CategoryIndex=5
 Label=Re-render Attempts
 Default=2
 Description=Number of times failed or missing frames are re-rendered within the same task before the task is failed. Set to 0 to fail immediately.
+
+[VerifyOutputSettleSeconds]
+Type=integer
+Minimum=0
+Category=Output Verification
+CategoryOrder=80
+CategoryIndex=6
+Label=Settle Delay Before Re-check (seconds)
+Default=15
+Description=After the output files pass the first check, wait this many seconds and check them again using a fresh directory listing and by opening each file. This bypasses the SMB client cache (about 10 seconds) and catches files removed or renamed right after rendering. Set to 0 to disable.
+
+[VerifyOutputCheckHeader]
+Type=boolean
+Category=Output Verification
+CategoryOrder=80
+CategoryIndex=7
+Label=Check EXR Header
+Default=true
+Description=If enabled, the re-check also reads the first bytes of each .exr file and fails if it is not a valid OpenEXR file.
